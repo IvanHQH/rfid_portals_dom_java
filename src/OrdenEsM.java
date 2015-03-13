@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 
-
 public class OrdenEsM {
 	public int id;
 	public int customer_id;
+	public int client_id;
 	public String folio;
 	public int type;
 	public String created_at;
@@ -12,7 +12,7 @@ public class OrdenEsM {
 	public ArrayList<OrdenEsD> orden_es_ds;
 	public int pending;
 	
-	public OrdenEsM(int idCustomer,String folio,int type,int idWarehouse,String dateTime)
+	public OrdenEsM(int idClient,int idCustomer,String folio,int type,int idWarehouse,String dateTime)
 	{
 		this.id = 0;
 		this.customer_id = idCustomer;
@@ -22,6 +22,7 @@ public class OrdenEsM {
 		this.updated_at = dateTime;
 		this.pending = 1;
 		this.warehouse_id = idWarehouse;
+		this.client_id = idClient;
 		orden_es_ds = new ArrayList<OrdenEsD>();
 	}	
 	

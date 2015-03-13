@@ -9,20 +9,21 @@ import org.llrp.ltk.types.*;
 
 
 public class ReaderRFID implements LLRPEndpoint
-{
-	
+{	
 	private LLRPConnection reader;
 	private static final int TIMEOUT_MS = 1000;
 	private static final int ROSPEC_ID = 123;
-	private String folio = "100";
+	private String folio = "0";
 	private BatchFolio batchFolio;	
 	public List<TagReportData> tags;
 	public static boolean sendEpcs;
+	//public int limitTimeSpanConect = 1000000;
+	public int limitTimeSpanConnect = 1000000;
 	
 	public ReaderRFID(String clientUrl)
 	{
 		//client of BatchFolio is static
-		BatchFolio.setClient(new HttpClient(clientUrl));		
+		BatchFolio.setClient(new HttpClient(clientUrl));
 	}
 	
 	public void setWriteAlwaysJsonEpcs(boolean value)
@@ -244,13 +245,13 @@ public class ReaderRFID implements LLRPEndpoint
 			if(batchFolio == null)
 			{
 				batchFolio = new BatchFolio(folio,Methods.getCurrentDateTime(),
-						1,Methods.idWarehouse,Methods.idCustomer);
+						1,Methods.idWarehouse,Methods.idCustomer,Methods.idClient);
 			}
 			for (TagReportData tag : tags)
 			{			
-				epc = tag.getEPCParameter().toString().substring(13, 37);				
+				epc = tag.getEPCParameter().toString().substring(13, 37);		
 				batchFolio.addEPC(epc);				
-				System.out.println(epc);
+				//System.out.println(epc);
 				//System.out.println(tag.getAntennaID().getAntennaID().toString());
 				//System.out.println(tag.getLastSeenTimestampUTC());				
 			}
@@ -263,8 +264,14 @@ public class ReaderRFID implements LLRPEndpoint
 		if(batchFolio != null)
 			if(batchFolio.sizeEpcsBatch() > 0)
 			{
-				batchFolio.sendBacthEPCs();
-				batchFolio = null;
+				if(Methods.version == 1){
+					batchFolio.sendBacthEPCsVersion1();
+					batchFolio = null;
+				}
+				else if(Methods.version == 4){
+					batchFolio.sendBacthEPCsVersion4();
+					batchFolio = null;				
+				}
 			}
 	}
 	
@@ -289,7 +296,7 @@ public class ReaderRFID implements LLRPEndpoint
 		try
 		{
 			System.out.println("Connecting to the reader.");
-			((LLRPConnector) reader).connect();
+			((LLRPConnector) reader).connect(limitTimeSpanConnect);
 		}
 		catch (LLRPConnectionAttemptFailedException e1)
 		{
@@ -329,8 +336,8 @@ public class ReaderRFID implements LLRPEndpoint
 		disconnect();
 	}
 	
-	/*public boolean getBandSendEpcs()
+	public boolean conectionServer() throws IOException
 	{
-		return batchFolio.getBandSendEpcs();
-	}	*/
+		return BatchFolio.testConectionServer();
+	}
 }

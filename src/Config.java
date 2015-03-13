@@ -14,9 +14,19 @@ public class Config {
 		return idWarehouse;
 	}	
 	
-	private int idCustomer;
+	/*private int idCustomer;
 	public int getidCustomer(){
 		return idCustomer;
-	}		
+	}	*/	
+	
+	private int idClient;
+	public int getidClient(){
+		return idClient;
+	}
+	
+	private int version;
+	public int getVersion(){
+		return version;
+	}
 	
 }

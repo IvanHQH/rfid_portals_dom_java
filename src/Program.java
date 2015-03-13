@@ -12,32 +12,37 @@ import org.llrp.ltk.generated.parameters.TagReportData;
 public class Program {
 	
 	private static JFrame win;
-	private static JLabel label;
+	private static JLabel label,label2;
 	private static Config conf;
 	private static ReaderRFID reader;
-	private static int secondsReadFolio = 10000;
+	private static int secondsReadFolio = 5000;
 	private static int secondsNotReadFolio = 2000;
 	private static JTable table;
 	
 	public static void main(String[] argumentos) throws InterruptedException, IOException{						
-		/*String upc;
-		upc = EPC.EPCToUPC("0dfa25f20dfa25f20dfa25f2");
-		upc = EPC.EPCToUPC("e2006bf300006bf300006bf3");
-		upc = "";*/
 		initializeWindow();
-		conf = Methods.readJsonConfig();		
-		reader = new ReaderRFID(conf.getServerName());
-		//reader.setWriteAlwaysJsonEpcs(true);
-		if(conf == null)
-			label.setText("No se encontro archivo configuración ... ");
+		label.setText("Comenzando ... ");
+		conf = Methods.readJsonConfig();	
+		Methods.idClient = conf.getidClient();
+		Methods.idWarehouse = conf.getidWarehouse();
+		Methods.version = conf.getVersion();
+		if(conf != null)
+			label.setText(conf.getIpReader()+" - "+conf.getServerName());
 		else
+			label.setText("configuración no cargada");
+		reader = new ReaderRFID(conf.getServerName());
+		if(reader.conectionServer())
+			label2.setText("Servidor conectado");
+		else
+			label2.setText("Servidor no conectado");
+		label.setText("Lector OK ");
+		if(conf != null)
 		{
 			if(conf.getIpReader().length() == 0 || conf.getServerName().length() == 0
-					|| conf.getidCustomer() == 0 || conf.getidWarehouse() == 0)
+					|| conf.getidWarehouse() == 0)
 				label.setText("Archivo de configuración incompleto... ");
 			else
 			{
-				Methods.idCustomer = conf.getidCustomer();
 				Methods.idWarehouse = conf.getidWarehouse();
 				startReads();
 			}
@@ -55,24 +60,8 @@ public class Program {
 		win.setDefaultCloseOperation(win.EXIT_ON_CLOSE);		
 		label = new JLabel();	
 		win.getContentPane().add(label);	
-		
-		/*String[] columnNames = {"Cont","EPC"};
-		
-		Object[][] data = {{"abc","1"},{"def","2"}};	
-		
-		table = new JTable(data, columnNames);
-		win.getContentPane().add(table);
-		
-		DefaultTableModel modelo =  (DefaultTableModel) table.getModel();
-		modelo.addRow(new Object[]{"ghi","jkl"});
-		table.setModel(modelo);*/
-		//Object[][] data2 = {{"abc","3"},{"def","4"}};	
-		
-		//table = new JTable(data2, columnNames);		
-		//win.dispose();
-		//win.doLayout();
-		//win.repaint();
-				
+		label2 = new JLabel();	
+		win.getContentPane().add(label2);				
 	}
 	
 	private static void startReads() throws InterruptedException, IOException
@@ -85,23 +74,14 @@ public class Program {
 				Thread.sleep(secondsNotReadFolio);
 			else
 				Thread.sleep(secondsReadFolio);
-			if(reader.tags.size() == 0)
-			{
+			if(reader.tags.size() == 0){
 				label.setText("No se encontraron tags ... ");	
 			}
-			else
-			{
+			else{
 				label.setText("Tags leídas... ");
-				//label.setText("");
-				/*label.setText("");
-				for (TagReportData tag : reader.tags)
-				{			
-					label.setText(label.getText() + "\n" + 
-							tag.getEPCParameter().toString().substring(13, 37));	
-				}*/
 			}
-			label.setText("Termino lectura ... ");			
-			reader.sendBatchFolio();	
+			reader.sendBatchFolio();
+			label.setText("Termino lectura ... ");
 		}
 	}
 	

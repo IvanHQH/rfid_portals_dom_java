@@ -15,8 +15,9 @@ import com.google.gson.Gson;
 public class Methods {
 	
 	public static int idCustomer;
-	
+	public static int idClient;
 	public static int idWarehouse;
+	public static int version;
 	/*
 	 * returns the current date and time format yyyy-MM-dd hh:mm:ss
 	 * yyyy-mm-dd hh:mm:ss format to MySQL
