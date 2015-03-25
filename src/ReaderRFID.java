@@ -261,7 +261,7 @@ public class ReaderRFID implements LLRPEndpoint
 	public void sendBatchFolio() throws IOException
 	{		
 		//batchFolio.NextId();
-		if(batchFolio != null)
+		if(batchFolio != null){
 			if(batchFolio.sizeEpcsBatch() > 0)
 			{
 				if(Methods.version == 1){
@@ -270,9 +270,13 @@ public class ReaderRFID implements LLRPEndpoint
 				}
 				else if(Methods.version == 4){
 					batchFolio.sendBacthEPCsVersion4();
-					batchFolio = null;				
+					if(batchFolio.clearReads){
+						batchFolio = null;
+						batchFolio.clearReads = false;
+					}
 				}
 			}
+		}
 	}
 	
 	/*

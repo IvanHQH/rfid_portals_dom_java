@@ -7,9 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import org.json.JSONObject;
-
 import com.google.gson.Gson;
 
 public class Methods {
@@ -84,8 +82,8 @@ public class Methods {
 		return conf;
 	}
 	
-    /*	
-	public void createJson()
+    
+	/*public void createJsonConfig()
 	{
 		Gson gs = new Gson();
 		JSONObject json = new JSONObject(gs.toJson(this));
@@ -99,7 +97,7 @@ public class Methods {
 		} catch (IOException e) {
 			//manejar error
 		}		
-	}
-	*/	
+	}*/
+	
 	
 }

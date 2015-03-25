@@ -1,1 +1,1 @@
-{"ipReader":"192.168.15.103","serverName":"http://rfid.dev","idWarehouse":1,"version":1,"idClient":1}
+{"idClient":1,"ipReader":"192.168.15.103","idWarehouse":1,"serverName":"http://rfid.dev","version":1}

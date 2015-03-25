@@ -45,11 +45,11 @@ public class HttpClient {
 		    	sb.append(line + "\n");  
 		    }  
 		    br.close();  
-		    System.out.println(""+sb.toString());  
+		    //System.out.println(""+sb.toString());  
 		    return sb.toString();
 		}else
 		{
-		    System.out.println(con.getResponseMessage());
+		    //System.out.println(con.getResponseMessage());
 		    return con.getResponseMessage();
 		}		
 	}	

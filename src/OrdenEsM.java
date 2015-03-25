@@ -37,7 +37,6 @@ public class OrdenEsM {
 		{
 			OrdenEsD ordenD = new OrdenEsD(epc,1);
 			orden_es_ds.add(ordenD);
-			System.out.println(epc);
 			return true;
 		}
 		return false;
@@ -45,18 +44,14 @@ public class OrdenEsM {
 	
 	private boolean containsEpc(String epc)
 	{
+		System.out.println(orden_es_ds.size());
 		for(OrdenEsD orderD: orden_es_ds){
+			//System.out.println(orderD.epc);
 			if(orderD.epc.equals(epc))
 				return true;
 		}
 		return false;
 	}	
 	
-	/*public void CargaConstantes()
-	{
-		addEPC("30342848A80AA7C000000051");
-		addEPC("30342848A80AC0400000024E");
-		addEPC("30342848A80AB52000000065");
-	}*/
 	
 }

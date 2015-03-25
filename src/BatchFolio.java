@@ -10,6 +10,7 @@ public class BatchFolio {
 	private static HttpClient client;
 	private OrdenEsM ordenM; 
 	public static boolean writeAlwaysJsonUpc = false;
+	public static boolean clearReads = false;
 	
 	public static void setClient(HttpClient pClient){client = pClient;}	
 	
@@ -65,14 +66,14 @@ public class BatchFolio {
 				if(response.equals("0\n")){
 					uploadOrderM();			
 				}else{
-					//int idOrder = Integer.parseInt(response.replaceAll("\n", ""));
 					updateOrderM();
 				}
 			}
 		}
 		else{
 			serverSetNotRead();
-		} 				
+			clearReads = true;
+		}
 	}
 	
 	private void updateOrderM()
@@ -86,16 +87,16 @@ public class BatchFolio {
 		Toolkit.getDefaultToolkit().beep();
 		try {
 			res = client.sendJson("update_ordenesd", json);//delete and insert in orderm pending
-		} catch (IOException e) {e.printStackTrace();}
-		//AGREGAR CLIENT ID PARA OBTENER LA ORDERM CORREPONSIENTE
-		for(OrdenEsD orden :ordenM.orden_es_ds)
-		{
-			json = new JSONObject(gs.toJson(orden));
-			try {
-				json.put("client_id", Methods.idClient);
-				res = client.sendJson("ordenesd", json);
-			} catch (IOException e) {e.printStackTrace();}	
-		}				
+			//AGREGAR CLIENT ID PARA OBTENER LA ORDERM CORREPONSIENTE
+			for(OrdenEsD orden :ordenM.orden_es_ds)
+			{
+				json = new JSONObject(gs.toJson(orden));
+				try {
+					json.put("client_id", Methods.idClient);
+					res = client.sendJson("ordenesd", json);
+				} catch (IOException e) {e.printStackTrace();}	
+			}
+		} catch (IOException e) {e.printStackTrace();}			
 	}
 	
 	private void uploadOrderM()
@@ -106,19 +107,19 @@ public class BatchFolio {
 		String response = new String();
 		try {
 			response = client.sendJson("ordenesm", json);
-		} catch (IOException e) {e.printStackTrace();}
-		if(response.equals("yes save\n"))
-		{
-			Toolkit.getDefaultToolkit().beep();
-			for(OrdenEsD orden :ordenM.orden_es_ds)
+			if(response.equals("yes save\n"))
 			{
-				json = new JSONObject(gs.toJson(orden));
-				try {
-					json.put("client_id", Methods.idClient);
-					client.sendJson("ordenesd", json);
-				} catch (IOException e) {e.printStackTrace();}	
-			}			
-		}				
+				Toolkit.getDefaultToolkit().beep();
+				for(OrdenEsD orden :ordenM.orden_es_ds)
+				{
+					json = new JSONObject(gs.toJson(orden));
+					try {
+						json.put("client_id", Methods.idClient);
+						client.sendJson("ordenesd", json);
+					} catch (IOException e) {e.printStackTrace();}	
+				}			
+			}				
+		} catch (IOException e) {e.printStackTrace();}			
 	}
 	
 	private void serverSetNotRead()
