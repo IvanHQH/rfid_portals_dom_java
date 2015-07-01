@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class OrdenEsM {
+public class OrdenEsM implements Cloneable {
 	public int id;
 	public int customer_id;
 	public int client_id;
@@ -12,7 +12,7 @@ public class OrdenEsM {
 	public ArrayList<OrdenEsD> orden_es_ds;
 	public int pending;
 	
-	public OrdenEsM(int idClient,int idCustomer,String folio,int type,int idWarehouse,String dateTime)
+	public OrdenEsM(int idClient,int idCustomer,String folio,int type,int idWarehouse,String dateTime) 
 	{
 		this.id = 0;
 		this.customer_id = idCustomer;
@@ -53,5 +53,14 @@ public class OrdenEsM {
 		return false;
 	}	
 	
+    public Object clone(){
+        Object obj=null;
+        try{
+            obj=super.clone();
+        }catch(CloneNotSupportedException ex){
+            System.out.println("No se puede duplicar");
+        }
+        return obj;
+    }	
 	
 }

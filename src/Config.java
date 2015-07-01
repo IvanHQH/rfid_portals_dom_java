@@ -6,8 +6,9 @@ import com.google.gson.Gson;
 
 public class Config {
 	private String ipReader;
+	
 	public String getIpReader()
-		{return ipReader;}
+		{return ipReader;}	
 	public void setIpReader(String ipReader)
 		{this.ipReader = ipReader;}	
 	
@@ -30,8 +31,7 @@ public class Config {
 	public int getidClient()
 		{return idClient;}
 	public void setIdClient(int idClient)
-		{this.idClient = idClient;}
-	
+		{this.idClient = idClient;}	
 	
 	private int version;
 	public int getVersion()

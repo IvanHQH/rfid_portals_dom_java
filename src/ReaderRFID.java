@@ -7,7 +7,6 @@ import org.llrp.ltk.generated.parameters.*;
 import org.llrp.ltk.net.*;
 import org.llrp.ltk.types.*;
 
-
 public class ReaderRFID implements LLRPEndpoint
 {	
 	private LLRPConnection reader;
@@ -19,6 +18,13 @@ public class ReaderRFID implements LLRPEndpoint
 	public static boolean sendEpcs;
 	//public int limitTimeSpanConect = 1000000;
 	public int limitTimeSpanConnect = 1000000;
+	
+	public class Rfid
+	{
+		public Rfid(){}
+		public String ValueStr()
+		{return "ok";}
+	}		
 	
 	public ReaderRFID(String clientUrl)
 	{
@@ -258,9 +264,10 @@ public class ReaderRFID implements LLRPEndpoint
 		}		
 	}		
 
-	public void sendBatchFolio() throws IOException
+	public boolean sendBatchFolio() throws IOException
 	{		
 		//batchFolio.NextId();
+		boolean res = false;
 		if(batchFolio != null){
 			if(batchFolio.sizeEpcsBatch() > 0)
 			{
@@ -269,7 +276,7 @@ public class ReaderRFID implements LLRPEndpoint
 					batchFolio = null;
 				}
 				else if(Methods.version == 4){
-					batchFolio.sendBacthEPCsVersion4();
+					res = batchFolio.sendBacthEPCsVersion4();
 					if(batchFolio.clearReads){
 						batchFolio = null;
 						batchFolio.clearReads = false;
@@ -277,6 +284,7 @@ public class ReaderRFID implements LLRPEndpoint
 				}
 			}
 		}
+		return res;
 	}
 	
 	/*

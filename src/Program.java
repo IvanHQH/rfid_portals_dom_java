@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -23,8 +24,10 @@ public class Program {
 	private static JLabel label,label2;
 	private static Config conf;
 	private static ReaderRFID reader;
-	private static int secondsReadFolio = 5000;
-	private static int secondsNotReadFolio = 2000;
+	private static int secondsReadFolioV1 = 5000;
+	private static int secondsNotReadFolioV1 = 2000;
+	private static int secondsReadFolioV4 = 3000;
+	private static int secondsNotReadFolioV4 = 2000;	
 	private static JTable table;
 	private static JButton buttonConfig;
 	private static JPanel panelMain;
@@ -107,6 +110,9 @@ public class Program {
 		buttonConfig.setBounds(5, 75, 30, 35);
 		panelMain.add(buttonConfig);
 		
+		//win.setBackground(Color.WHITE);
+		panelMain.setBackground(Color.WHITE);
+		
 		win.setVisible(true);
 		
 		buttonConfig.addActionListener(new ActionListener() {
@@ -169,7 +175,7 @@ public class Program {
 		
 		bttnSaveConfig = new JButton("Guardar");
 		bttnSaveConfig.setBounds(xini, yini+5*(htxt+10), 80, 25);
-		panelConf.add(bttnSaveConfig);
+		panelConf.add(bttnSaveConfig);		
 		
 		bttnSaveConfig.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
@@ -187,7 +193,6 @@ public class Program {
 			}
 		}          
 		});					
-
 		winConf.setVisible(true);			
 	}	
 	
@@ -197,15 +202,26 @@ public class Program {
 		reader.run(conf.getIpReader());
 		while(true){
 			label.setText("Leeyendo tags ... ");
-			if(reader.sendEpcs == true)
-				Thread.sleep(secondsNotReadFolio);
-			else
-				Thread.sleep(secondsReadFolio);
+			if(reader.sendEpcs == true){
+				if(Methods.version == 1)
+					Thread.sleep(secondsNotReadFolioV1);
+				else if(Methods.version == 4)
+					Thread.sleep(secondsNotReadFolioV4);
+			}
+			else{
+				if(Methods.version == 1)
+					Thread.sleep(secondsReadFolioV1);
+				else if(Methods.version == 4)
+					Thread.sleep(secondsReadFolioV4);				
+			}
 			if(reader.tags.size() == 0)
 				label.setText("No se encontraron tags ... ");	
 			else
 				label.setText("Tags leídas... ");
-			reader.sendBatchFolio();
+			if(reader.sendBatchFolio())
+				panelMain.setBackground(Color.YELLOW);
+			else
+				panelMain.setBackground(Color.WHITE);
 			label.setText("Termino lectura ... ");
 		}
 	}	
