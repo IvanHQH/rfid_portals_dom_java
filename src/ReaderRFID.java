@@ -271,11 +271,7 @@ public class ReaderRFID implements LLRPEndpoint
 		if(batchFolio != null){
 			if(batchFolio.sizeEpcsBatch() > 0)
 			{
-				if(Methods.version == 1){
-					batchFolio.sendBacthEPCsVersion1();
-					batchFolio = null;
-				}
-				else if(Methods.version == 4){
+				if(Methods.version == 4){
 					res = batchFolio.sendBacthEPCsVersion4();
 					if(batchFolio.clearReads){
 						batchFolio = null;

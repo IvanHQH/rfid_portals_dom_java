@@ -28,27 +28,7 @@ public class BatchFolio {
 	{
 		return ordenM.orden_es_ds.size();
 	}		
-	
-	public void sendBacthEPCsVersion1() throws IOException
-	{		
-		JSONObject json = new JSONObject();
-		json.put("client_id", Methods.idClient);
-		String response = client.sendJson("/variables/get_var_read", json);
-		if(response.equals("1\n")){
-			ReaderRFID.sendEpcs = true;
-			serverSetNotRead();
-		}
-		else if(ReaderRFID.sendEpcs == true)
-		{
-			Toolkit.getDefaultToolkit().beep();
-			ReaderRFID.sendEpcs = false;
-			if(ordenM.orden_es_ds.isEmpty() == false)
-			{
-				uploadOrderM();
-			}
-		}					
-	}	
-			
+				
 	public boolean sendBacthEPCsVersion4() throws IOException
 	{		
 		JSONObject json = new JSONObject();
@@ -61,9 +41,9 @@ public class BatchFolio {
 			if(ordenM.orden_es_ds.isEmpty() == false)
 			{			
 				Gson gs = new Gson();		
-				response = client.sendJson("/order_pending", json);
+				response = client.sendJson("order_pending", json);
 				if(response.equals("1\n")){
-					res = updateOrderM2();		
+					res = updateOrderM();		
 				}			
 			}
 		}
@@ -74,7 +54,7 @@ public class BatchFolio {
 		return res;
 	}
 	
-	private boolean updateOrderM2()
+	private boolean updateOrderM()
 	{
 		JSONObject json = new JSONObject();
 		Gson gs = new Gson();
@@ -93,60 +73,6 @@ public class BatchFolio {
 		return resb;			
 	}	
 	
-	private boolean updateOrderM()
-	{
-		JSONObject json = new JSONObject();
-		Gson gs = new Gson();
-		String res;
-		json.put("client_id", Methods.idClient);
-		json.put("warehouse_id", ordenM.warehouse_id);
-		String response = new String();
-		Toolkit.getDefaultToolkit().beep();
-		boolean resb = true;
-		//OrdenEsM ordenMAux = (OrdenEsM)ordenM.clone();
-		try {
-			res = client.sendJson("update_ordenesd", json);//delete and insert in orderm pending
-			//AGREGAR CLIENT ID PARA OBTENER LA ORDERM CORREPONSIENTE
-			if(res.equals("1\n")){
-				resb = false;
-				for(OrdenEsD orden :ordenM.orden_es_ds)
-				{
-					json = new JSONObject(gs.toJson(orden));
-					try {
-						json.put("client_id", Methods.idClient);
-						res = client.sendJson("ordenesd", json);
-						if(res.equals("yes save\n"))
-							resb = true;
-					} catch (IOException e) {e.printStackTrace();}	
-				}								
-			}
-			else resb = false;				
-		} catch (IOException e) {e.printStackTrace();}
-		return resb;
-	}
-	
-	private void uploadOrderM()
-	{
-		JSONObject json = new JSONObject();
-		Gson gs = new Gson();
-		json = new JSONObject(gs.toJson(ordenM));
-		String response = new String();
-		try {
-			response = client.sendJson("ordenesm", json);
-			if(response.equals("yes save\n"))
-			{
-				Toolkit.getDefaultToolkit().beep();
-				for(OrdenEsD orden :ordenM.orden_es_ds)
-				{
-					json = new JSONObject(gs.toJson(orden));
-					try {
-						json.put("client_id", Methods.idClient);
-						client.sendJson("ordenesd", json);
-					} catch (IOException e) {e.printStackTrace();}	
-				}			
-			}				
-		} catch (IOException e) {e.printStackTrace();}			
-	}
 	
 	private void serverSetNotRead()
 	{
